@@ -41,10 +41,21 @@
             gap: 1rem;
         }
 
+        .header-right {
+            display: flex;
+            align-items: center;
+        }
+
         .logo {
             height: 60px;
             width: auto;
-            display: block; /* Asegura que se comporte bien */
+            display: block;
+        }
+
+        .logo-right {
+            height: 50px;
+            width: auto;
+            display: block;
         }
 
         .description {
@@ -166,12 +177,14 @@
                 text-align: center;
             }
 
-            .header-left {
+            .header-left,
+            .header-right {
                 flex-direction: column;
+                gap: 0.5rem;
             }
 
             .container {
-                margin-top: 150px;
+                margin-top: 180px;
                 padding: 1rem;
             }
 
@@ -182,12 +195,15 @@
     </style>
 </head>
 <body>
-    <!-- Header semitransparente -->
+    <!-- Header semitransparente con dos logos -->
     <header>
         <div class="header-left">
-            <!-- AQUÍ ESTÁ EL CAMBIO: Busca 'logo.png' en tu carpeta local -->
             <img src="logo.png" alt="Taber Luz de Israel Logo" class="logo" id="logo">
             <span class="description">Profe-Tracker</span>
+        </div>
+        
+        <div class="header-right">
+            <img src="logo-profe-tracker.png" alt="Profe-Tracker Logo" class="logo-right" id="logoRight">
         </div>
     </header>
 
@@ -204,27 +220,27 @@
 
                 <div class="form-group">
                     <label for="lugar">Lugar:</label>
-                    <input type="text" id="lugar" name="lugar" placeholder="Campos Verdes, Pan y Chocolate, etc" required>
+                    <input type="text" id="lugar" name="lugar" placeholder="Ej: Campos Verdes, Pan y Chocolate" required>
                 </div>
 
                 <div class="form-group">
                     <label for="compartidos">Compartidos:</label>
-                    <input type="text" id="compartidos" name="compartidos" placeholder="Ej: 5, 10, 7, 15" required>
+                    <input type="text" id="compartidos" name="compartidos" placeholder="Ej: 10. 20. 30" required>
                 </div>
 
                 <div class="form-group">
                     <label for="profesiones">Profesiones:</label>
-                    <textarea id="profesiones" name="profesiones" placeholder="Ej: 3, 7, 10, 20" required></textarea>
+                    <textarea id="profesiones" name="profesiones" placeholder="5, 10, 15" required></textarea>
                 </div>
 
                 <div class="form-group">
                     <label for="servidores">Servidores:</label>
-                    <input type="text" id="servidores" name="servidores" placeholder="Ej: 2, 3, 6, 8" required>
+                    <input type="text" id="servidores" name="servidores" placeholder="Ej: 6, 10, 15" required>
                 </div>
 
                 <div class="form-group">
                     <label for="nota">Nota:</label>
-                    <textarea id="nota" name="nota" placeholder="Aqui escribes tu reporte"></textarea>
+                    <textarea id="nota" name="nota" placeholder="Aqui pones tu reporte. Ej: Dios les bendiga Herman@s. El miércoles 23 de este mes en el ministerio de pan y chocolate se compartió la palabra con 55 personas y hubo 16 profesiones de fé para la gloria y honra de Dios."></textarea>
                 </div>
 
                 <button type="submit" id="submitBtn">Enviar Registro</button>
