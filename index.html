@@ -30,7 +30,7 @@
             padding: 1rem 2rem;
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: space-between; /* Mantiene los logos a los extremos */
             z-index: 1000;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
@@ -162,27 +162,32 @@
             display: none;
         }
 
-        /* Responsive design */
+        /* Responsive design: Logos más pequeños pero a los lados */
         @media (max-width: 768px) {
             header {
-                padding: 1rem;
+                padding: 0.5rem 1rem; /* Reducimos padding lateral para dar más espacio */
+                /* justify-content: space-between se mantiene heredado */
             }
 
             .logo {
-                height: 50px;
+                height: 35px; /* Reducido de 50px a 35px */
             }
 
             .logo-right {
-                height: 40px;
+                height: 30px; /* Reducido de 40px a 30px */
             }
 
             .container {
-                margin-top: 120px;
+                margin-top: 80px; /* Ajustado porque el header es más pequeño ahora */
                 padding: 1rem;
             }
 
             .form-container {
                 padding: 1.5rem;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
             }
         }
     </style>
