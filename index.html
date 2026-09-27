@@ -6,11 +6,10 @@
     <title>Taber Digital · Infraestructura</title>
     <style>
         :root {
-            --bg-color: #fcfbf9; /* Un blanco ligeramente cálido/papel */
+            --bg-color: #fcfbf9;
             --text-main: #1a1a1a;
             --text-muted: #666;
             --border-color: #d1d1d1;
-            --accent: #1a73e8; /* Mantenemos el azul corporativo solo para acciones clave */
             --font-serif: 'Georgia', 'Times New Roman', serif;
             --font-sans: 'Helvetica Neue', 'Arial', sans-serif;
             --font-mono: 'Courier New', Courier, monospace;
@@ -31,7 +30,6 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Tipografía */
         h1, h2, h3 {
             font-family: var(--font-serif);
             font-weight: normal;
@@ -65,19 +63,11 @@
             border-bottom: 1px solid var(--border-color);
         }
 
-        .brand {
-            font-family: var(--font-serif);
-            font-size: 1.2rem;
-            font-weight: bold;
-            letter-spacing: -0.5px;
-        }
-
-        .brand span {
-            font-family: var(--font-mono);
-            font-size: 0.7rem;
-            margin-left: 8px;
-            color: var(--text-muted);
-            vertical-align: middle;
+        /* Logo Styles */
+        .brand-logo {
+            height: 50px; 
+            width: auto;
+            display: block;
         }
 
         nav ul {
@@ -142,12 +132,12 @@
             font-family: var(--font-serif);
         }
 
-        /* Grid de Módulos (Productos) */
+        /* Grid de Módulos */
         .modules-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1px; /* Gap pequeño para las líneas */
-            background-color: var(--border-color); /* Color de las líneas */
+            gap: 1px;
+            background-color: var(--border-color);
             border-top: 1px solid var(--border-color);
             margin: 4rem 2rem;
             max-width: 1400px;
@@ -203,7 +193,6 @@
             align-items: center;
             gap: 0.5rem;
             margin-top: auto;
-            group: hover;
         }
 
         .module-link span {
@@ -214,7 +203,7 @@
             transform: translateX(5px);
         }
 
-        /* Sección de Filosofía (Lo que cambia) */
+        /* Sección de Filosofía */
         .philosophy {
             padding: 6rem 2rem;
             max-width: 900px;
@@ -230,12 +219,11 @@
         }
 
         .philosophy-item h3 {
-            font-size: 1.2rem;
-            margin-bottom: 0.5rem;
             font-family: var(--font-mono);
             text-transform: uppercase;
             font-size: 0.8rem;
             color: var(--text-muted);
+            margin-bottom: 0.5rem;
         }
         
         .philosophy-item p {
@@ -243,29 +231,109 @@
             font-size: 1.1rem;
         }
 
-        /* Footer */
+        /* Footer Estilo APEL (Con Logo) */
         footer {
             border-top: 1px solid var(--border-color);
-            padding: 3rem 2rem;
+            padding: 4rem 2rem;
             margin-top: 4rem;
+            background-color: var(--bg-color);
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
             display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
+            flex-direction: column;
+            gap: 3rem;
+        }
+
+        /* Contenedor del Logo y Slogan en Footer */
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
             flex-wrap: wrap;
-            gap: 2rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 2rem;
+        }
+
+        .footer-logo {
+            height: 40px; /* Un poco más pequeño que en el header */
+            width: auto;
+            display: block;
+            filter: grayscale(100%); /* Opcional: hace el logo blanco y negro para combinar con el estilo */
+            opacity: 0.8;
+            transition: opacity 0.3s ease, filter 0.3s ease;
+        }
+
+        .footer-logo:hover {
+            opacity: 1;
+            filter: grayscale(0%);
+        }
+
+        .footer-slogan {
+            font-family: var(--font-serif);
+            font-size: 1.4rem;
+            color: var(--text-main);
+            line-height: 1.4;
+            flex: 1;
+        }
+
+        .footer-slogan span {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: block;
+            margin-top: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
         }
 
         .footer-col h4 {
             font-family: var(--font-mono);
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             text-transform: uppercase;
-            margin-bottom: 1rem;
             color: var(--text-muted);
+            margin-bottom: 1rem;
+            letter-spacing: 1px;
         }
 
         .footer-col p {
-            font-size: 0.9rem;
-            max-width: 300px;
+            font-family: var(--font-serif);
+            font-size: 0.95rem;
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+
+        .footer-col .mono-detail {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+            display: block;
+        }
+
+        .footer-bottom {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .footer-bottom p {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
         }
 
         /* Animations */
@@ -288,7 +356,7 @@
             header {
                 padding: 1rem;
                 flex-direction: column;
-                gap: 1rem;
+                gap: 1.5rem;
                 align-items: flex-start;
             }
 
@@ -298,7 +366,7 @@
             }
 
             .hero {
-                padding-top: 140px;
+                padding-top: 160px;
             }
 
             .philosophy-grid {
@@ -315,6 +383,16 @@
                 min-height: auto;
                 padding: 2rem 1.5rem;
             }
+
+            .footer-brand {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .footer-slogan {
+                font-size: 1.2rem;
+            }
         }
     </style>
 </head>
@@ -323,7 +401,7 @@
     <!-- Header -->
     <header id="main-header">
         <div class="brand">
-            TABER DIGITAL <span>INFRAESTRUCTURA v1.0</span>
+            <img src="logo.png" alt="Taber Luz de Israel" class="brand-logo">
         </div>
         <nav>
             <ul>
@@ -451,20 +529,48 @@
         </div>
     </section>
 
-    <!-- Footer -->
+    <!-- Footer con Logo -->
     <footer>
-        <div class="footer-col">
-            <h4>Taber Luz de Israel</h4>
-            <p>Infraestructura Digital Colaborativa.<br>El Salvador, 2026.</p>
-        </div>
-        <div class="footer-col">
-            <h4>Estado</h4>
-            <p class="mono">v1.0 · Build 2026.09.27</p>
-            <p class="mono" style="margin-top: 0.5rem; color: #2ecc71;">Sistemas Online</p>
-        </div>
-        <div class="footer-col">
-            <h4>Contacto</h4>
-            <p class="mono">soporte@taberdigital.org</p>
+        <div class="footer-content">
+            
+            <!-- Parte Superior: Logo + Slogan -->
+            <div class="footer-brand">
+                <img src="logo.png" alt="Taber Luz de Israel" class="footer-logo">
+                <div class="footer-slogan">
+                    Diseñada por nosotros.<br>Guardada por ti.
+                    <span>Una sola infraestructura. Cuando se acabe el lote, no habrá otra igual.</span>
+                </div>
+            </div>
+
+            <!-- Grid de 3 Columnas (Como antes) -->
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>Edición Limitada</h4>
+                    <p>Infraestructura Digital Colaborativa.</p>
+                    <span class="mono-detail">Lote limitado · Sin costo de reserva</span>
+                    <span class="mono-detail">Ningún módulo repetido</span>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Grupo Administración</h4>
+                    <p>Taber Luz de Israel · INDEL.</p>
+                    <span class="mono-detail">Edición exclusiva para ministerios activos</span>
+                    <span class="mono-detail">El Salvador, 2026</span>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Proceso</h4>
+                    <p>Hecho a mano, módulo por módulo.</p>
+                    <span class="mono-detail">Código abierto · Datos seguros</span>
+                    <span class="mono-detail">Revisado y numerado por el equipo central</span>
+                </div>
+            </div>
+
+            <!-- Línea inferior técnica -->
+            <div class="footer-bottom">
+                <p>Taber Digital · Infraestructura v1.0</p>
+                <p class="mono">Build 2026.09.27 · Sistemas Online</p>
+            </div>
         </div>
     </footer>
 
@@ -477,27 +583,6 @@
             } else {
                 header.classList.remove('scrolled');
             }
-        });
-
-        // Simple reveal on scroll for modules (optional enhancement)
-        const observerOptions = {
-            threshold: 0.1
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('.module-card').forEach(card => {
-            // Initial state for JS animation if needed, currently handled by CSS classes
-            // card.style.opacity = '0';
-            // card.style.transform = 'translateY(20px)';
-            // observer.observe(card);
         });
     </script>
 </body>
