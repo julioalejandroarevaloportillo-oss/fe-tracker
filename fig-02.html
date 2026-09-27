@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FIG. 02 — Control de Asistencia</title>
+    <style>
+        :root {
+            --bg-color: #fcfbf9;
+            --text-main: #1a1a1a;
+            --text-muted: #666;
+            --border-color: #d1d1d1;
+            --input-border: #eee;
+            --accent-success: #2ecc71;
+            --accent-error: #e74c3c;
+            --font-serif: 'Georgia', 'Times New Roman', serif;
+            --font-sans: 'Helvetica Neue', 'Arial', sans-serif;
+            --font-mono: 'Courier New', Courier, monospace;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: var(--bg-color); color: var(--text-main); font-family: var(--font-sans); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+        h1, h2, h3 { font-family: var(--font-serif); font-weight: normal; }
+        .mono { font-family: var(--font-mono); font-size: 0.8rem; letter-spacing: -0.5px; text-transform: uppercase; color: var(--text-muted); }
+
+        /* Header */
+        header { position: fixed; top: 0; left: 0; width: 100%; padding: 1.5rem 2rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid transparent; background: rgba(252, 251, 249, 0.95); backdrop-filter: blur(5px); z-index: 1000; transition: border-color 0.3s ease; }
+        header.scrolled { border-bottom: 1px solid var(--border-color); }
+        .brand-logo { height: 45px; width: auto; display: block; filter: grayscale(100%); opacity: 0.8; transition: all 0.3s ease; }
+        .brand-logo:hover { opacity: 1; filter: grayscale(0%); }
+        nav a { text-decoration: none; color: var(--text-main); font-family: var(--font-mono); font-size: 0.8rem; text-transform: uppercase; margin-left: 2rem; position: relative; }
+        nav a::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 1px; background-color: var(--text-main); transition: width 0.3s ease; }
+        nav a:hover::after { width: 100%; }
+
+        /* Main Container */
+        .container { max-width: 800px; margin: 140px auto 60px; padding: 0 2rem; animation: fadeIn 1s ease-out; }
+
+        /* Form Header */
+        .form-header { margin-bottom: 3rem; border-bottom: 1px solid var(--border-color); padding-bottom: 2rem; }
+        .form-tag { display: inline-block; margin-bottom: 1rem; border-left: 2px solid var(--text-main); padding-left: 1rem; }
+        .form-title { font-size: clamp(2rem, 4vw, 3rem); line-height: 1.1; margin-bottom: 1rem; letter-spacing: -1px; }
+        .form-desc { font-family: var(--font-serif); font-size: 1.1rem; color: var(--text-muted); max-width: 500px; }
+
+        /* Form Styling */
+        .form-group { margin-bottom: 2.5rem; position: relative; }
+        label { display: block; font-family: var(--font-mono); font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.5rem; letter-spacing: 1px; }
+        
+        input[type="text"], input[type="date"], input[type="number"], select, textarea {
+            width: 100%; padding: 0.8rem 0; background: transparent; border: none; border-bottom: 1px solid var(--input-border);
+            font-family: var(--font-serif); font-size: 1.1rem; color: var(--text-main); border-radius: 0;
+            transition: border-color 0.3s ease, padding-left 0.3s ease;
+        }
+        input:focus, select:focus, textarea:focus { outline: none; border-bottom: 1px solid var(--text-main); padding-left: 5px; background-color: rgba(0,0,0,0.02); }
+        textarea { resize: vertical; min-height: 80px; line-height: 1.8; }
+        ::placeholder { color: #ccc; font-style: italic; font-family: var(--font-serif); }
+
+        /* Grid Layout for Attendance & Finance */
+        .grid-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px dashed var(--input-border);
+        }
+        .grid-item { margin-bottom: 0; }
+
+        /* Button */
+        button { width: 100%; padding: 1.2rem; background-color: var(--text-main); color: #fff; border: none; font-family: var(--font-mono); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: all 0.3s ease; margin-top: 1rem; }
+        button:hover { background-color: #333; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        button:disabled { background-color: #ccc; cursor: not-allowed; transform: none; box-shadow: none; }
+
+        /* Messages */
+        .success-message, .error-message { margin-top: 2rem; padding: 1.5rem; border: 1px solid; text-align: center; font-family: var(--font-mono); font-size: 0.85rem; text-transform: uppercase; display: none; animation: slideUp 0.4s ease-out; }
+        .success-message { border-color: var(--accent-success); color: var(--accent-success); background: rgba(46, 204, 113, 0.05); }
+        .error-message { border-color: var(--accent-error); color: var(--accent-error); background: rgba(231, 76, 60, 0.05); }
+
+        .page-footer { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border-color); text-align: center; font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 768px) {
+            header { padding: 1rem; flex-direction: column; gap: 1rem; align-items: flex-start; }
+            nav a { margin-left: 0; margin-right: 1.5rem; }
+            .container { margin-top: 160px; padding: 0 1.5rem; }
+            .form-title { font-size: 2rem; }
+            .grid-section { grid-template-columns: 1fr; gap: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header id="main-header">
+        <div class="brand">
+            <img src="logo.png" alt="Taber Luz de Israel" class="brand-logo">
+        </div>
+        <nav>
+            <a href="index.html">Volver al Hub</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="form-header">
+            <div class="form-tag mono">FIG. 02 — REGISTRO ACTIVO</div>
+            <h1 class="form-title">Control de Asistencia</h1>
+            <p class="form-desc">
+                Reporte dominical consolidado. Registro de asistencia por áreas y entrada de ofrendas.
+            </p>
+        </div>
+
+        <form id="attendanceForm">
+            <!-- Fecha y Culto -->
+            <div class="form-group">
+                <label for="fecha">01 / Fecha</label>
+                <input type="date" id="fecha" name="fecha" required>
+            </div>
+
+            <div class="form-group">
+                <label for="culto">02 / Tipo de Culto</label>
+                <select id="culto" name="culto" required style="font-family: var(--font-serif);">
+                    <option value="" disabled selected>Seleccione...</option>
+                    <option value="Dominical Mañana">Dominical Mañana</option>
+                    <option value="Dominical Noche">Dominical Noche</option>
+                    <option value="Miércoles">Miércoles</option>
+                    <option value="Viernes">Viernes</option>
+                    <option value="Especial">Reunión Especial</option>
+                </select>
+            </div>
+
+            <!-- Sección Asistencia (Grid) -->
+            <div class="grid-section">
+                <div class="form-group grid-item">
+                    <label for="asistencia_templo">03 / Templo</label>
+                    <input type="number" id="asistencia_templo" name="asistencia_templo" placeholder="0" required>
+                </div>
+                <div class="form-group grid-item">
+                    <label for="asistencia_escuela">04 / Escuela Bíblica</label>
+                    <input type="number" id="asistencia_escuela" name="asistencia_escuela" placeholder="0" required>
+                </div>
+                <div class="form-group grid-item">
+                    <label for="asistencia_parqueo">05 / Parqueo (Ext)</label>
+                    <input type="number" id="asistencia_parqueo" name="asistencia_parqueo" placeholder="0">
+                </div>
+                <div class="form-group grid-item">
+                    <label for="servidores">06 / Servidores</label>
+                    <input type="number" id="servidores" name="servidores" placeholder="0" required>
+                </div>
+            </div>
+
+            <!-- Sección Finanzas (Grid) -->
+            <div class="grid-section">
+                <div class="form-group grid-item">
+                    <label for="ofrenda">07 / Ofrenda ($)</label>
+                    <input type="number" step="0.01" id="ofrenda" name="ofrenda" placeholder="0.00">
+                </div>
+                <div class="form-group grid-item">
+                    <label for="diezmo">08 / Diezmo ($)</label>
+                    <input type="number" step="0.01" id="diezmo" name="diezmo" placeholder="0.00">
+                </div>
+                <div class="form-group grid-item">
+                    <label for="ofrenda_escuela">09 / Ofrenda Escuela ($)</label>
+                    <input type="number" step="0.01" id="ofrenda_escuela" name="ofrenda_escuela" placeholder="0.00">
+                </div>
+            </div>
+
+            <button type="submit" id="submitBtn">Enviar Reporte</button>
+        </form>
+
+        <div id="successMessage" class="success-message">
+            ✓ Reporte de asistencia guardado exitosamente.
+        </div>
+        <div id="errorMessage" class="error-message">
+             Error de conexión. Por favor intente nuevamente.
+        </div>
+
+        <div class="page-footer">
+            Taber Digital · Control de Asistencia v1.0 <br>
+            Hecho a mano, módulo por módulo · El Salvador 2026
+        </div>
+    </div>
+
+    <script>
+        // ⚠️ IMPORTANTE: Debes crear una NUEVA hoja en SheetDB para asistencia o usar una URL diferente
+        // Si usas la misma URL que Profe-Tracker, asegúrate de que los encabezados coincidan o se agreguen nuevos.
+        // Lo ideal es crear una nueva API en sheetdb.io apuntando a una pestaña nueva "Asistencia"
+        const SHEETDB_API_URL = 'https://sheetdb.io/api/v1/5gqgmamuwhfo5'; 
+
+        document.getElementById('attendanceForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const submitBtn = document.getElementById('submitBtn');
+            const successMsg = document.getElementById('successMessage');
+            const errorMsg = document.getElementById('errorMessage');
+
+            successMsg.style.display = 'none';
+            errorMsg.style.display = 'none';
+
+            const originalBtnText = submitBtn.textContent;
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Procesando...';
+
+            const formData = {
+                fecha: document.getElementById('fecha').value,
+                culto: document.getElementById('culto').value,
+                asistencia_templo: document.getElementById('asistencia_templo').value,
+                asistencia_escuela: document.getElementById('asistencia_escuela').value,
+                asistencia_parqueo: document.getElementById('asistencia_parqueo').value,
+                servidores: document.getElementById('servidores').value,
+                ofrenda: document.getElementById('ofrenda').value,
+                diezmo: document.getElementById('diezmo').value,
+                ofrenda_escuela: document.getElementById('ofrenda_escuela').value
+            };
+
+            try {
+                const response = await fetch(SHEETDB_API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+
+                if (response.ok) {
+                    successMsg.style.display = 'block';
+                    this.reset();
+                    document.getElementById('fecha').valueAsDate = new Date();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                } else {
+                    throw new Error('Error en la respuesta');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                errorMsg.style.display = 'block';
+                window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalBtnText;
+            }
+        });
+
+        document.getElementById('fecha').valueAsDate = new Date();
+
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('main-header');
+            if (window.scrollY > 50) header.classList.add('scrolled');
+            else header.classList.remove('scrolled');
+        });
+    </script>
+</body>
+</html>
