@@ -3,8 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profe-Tracker</title>
+    <title>Taber Digital · Infraestructura</title>
     <style>
+        :root {
+            --bg-color: #fcfbf9; /* Un blanco ligeramente cálido/papel */
+            --text-main: #1a1a1a;
+            --text-muted: #666;
+            --border-color: #d1d1d1;
+            --accent: #1a73e8; /* Mantenemos el azul corporativo solo para acciones clave */
+            --font-serif: 'Georgia', 'Times New Roman', serif;
+            --font-sans: 'Helvetica Neue', 'Arial', sans-serif;
+            --font-mono: 'Courier New', Courier, monospace;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -12,307 +23,482 @@
         }
 
         body {
-            font-family: 'Georgia', serif;
-            background-color: #f0f4f8;
-            color: #333;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-sans);
             line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* Header semitransparente */
+        /* Tipografía */
+        h1, h2, h3 {
+            font-family: var(--font-serif);
+            font-weight: normal;
+        }
+
+        .mono {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+        }
+
+        /* Header / Nav */
         header {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            background-color: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            padding: 1rem 2rem;
+            padding: 1.5rem 2rem;
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            justify-content: space-between; /* Mantiene los logos a los extremos */
+            border-bottom: 1px solid transparent;
+            background: rgba(252, 251, 249, 0.95);
+            backdrop-filter: blur(5px);
             z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .header-left {
-            display: flex;
-            align-items: center;
-        }
-
-        .header-right {
-            display: flex;
-            align-items: center;
-        }
-
-        .logo {
-            height: 60px;
-            width: auto;
-            display: block;
-        }
-
-        .logo-right {
-            height: 50px;
-            width: auto;
-            display: block;
-        }
-
-        /* Main container */
-        .container {
-            max-width: 800px;
-            margin: 100px auto 50px;
-            padding: 2rem;
-        }
-
-        /* Form styling */
-        .form-container {
-            background-color: white;
-            padding: 2.5rem;
-            border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            border-top: 5px solid #1a73e8;
-        }
-
-        h1 {
-            text-align: center;
-            color: #1a73e8;
-            margin-bottom: 2rem;
-            font-size: 2rem;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: #1a73e8;
-            font-weight: bold;
-            font-size: 1rem;
-        }
-
-        input[type="text"],
-        input[type="date"],
-        textarea,
-        select {
-            width: 100%;
-            padding: 0.75rem;
-            border: 2px solid #d0e1f9;
-            border-radius: 5px;
-            font-size: 1rem;
-            font-family: 'Georgia', serif;
             transition: border-color 0.3s ease;
         }
 
-        input[type="text"]:focus,
-        input[type="date"]:focus,
-        textarea:focus,
-        select:focus {
-            outline: none;
-            border-color: #1a73e8;
-            box-shadow: 0 0 5px rgba(26, 115, 232, 0.3);
+        header.scrolled {
+            border-bottom: 1px solid var(--border-color);
         }
 
-        textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        button {
-            width: 100%;
-            padding: 1rem;
-            background-color: #1a73e8;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 1.1rem;
+        .brand {
+            font-family: var(--font-serif);
+            font-size: 1.2rem;
             font-weight: bold;
-            cursor: pointer;
+            letter-spacing: -0.5px;
+        }
+
+        .brand span {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            margin-left: 8px;
+            color: var(--text-muted);
+            vertical-align: middle;
+        }
+
+        nav ul {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-main);
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            position: relative;
+            transition: opacity 0.3s ease;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background-color: var(--text-main);
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 180px 2rem 100px;
+            max-width: 900px;
+            margin: 0 auto;
+            animation: fadeIn 1.2s ease-out;
+        }
+
+        .hero-tag {
+            display: inline-block;
+            margin-bottom: 1.5rem;
+            color: var(--text-muted);
+            border-left: 2px solid var(--text-main);
+            padding-left: 1rem;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            line-height: 1.1;
+            margin-bottom: 2rem;
+            letter-spacing: -1px;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            max-width: 500px;
+            margin-bottom: 3rem;
+            font-family: var(--font-serif);
+        }
+
+        /* Grid de Módulos (Productos) */
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1px; /* Gap pequeño para las líneas */
+            background-color: var(--border-color); /* Color de las líneas */
+            border-top: 1px solid var(--border-color);
+            margin: 4rem 2rem;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .module-card {
+            background-color: var(--bg-color);
+            padding: 3rem 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 350px;
             transition: background-color 0.3s ease;
-            font-family: 'Georgia', serif;
+            position: relative;
+            overflow: hidden;
         }
 
-        button:hover {
-            background-color: #1557b0;
+        .module-card:hover {
+            background-color: #f4f4f4;
         }
 
-        button:disabled {
-            background-color: #90caf9;
-            cursor: not-allowed;
+        .module-number {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            display: block;
         }
 
-        .success-message {
-            background-color: #d4edda;
-            color: #155724;
-            padding: 1rem;
-            border-radius: 5px;
-            margin-top: 1rem;
-            text-align: center;
-            display: none;
+        .module-title {
+            font-family: var(--font-serif);
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            line-height: 1.2;
         }
 
-        .error-message {
-            background-color: #f8d7da;
-            color: #721c24;
-            padding: 1rem;
-            border-radius: 5px;
-            margin-top: 1rem;
-            text-align: center;
-            display: none;
+        .module-desc {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            font-family: var(--font-sans);
         }
 
-        /* Responsive design: Logos más pequeños pero a los lados */
+        .module-link {
+            text-decoration: none;
+            color: var(--text-main);
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: auto;
+            group: hover;
+        }
+
+        .module-link span {
+            transition: transform 0.3s ease;
+        }
+
+        .module-card:hover .module-link span {
+            transform: translateX(5px);
+        }
+
+        /* Sección de Filosofía (Lo que cambia) */
+        .philosophy {
+            padding: 6rem 2rem;
+            max-width: 900px;
+            margin: 0 auto;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .philosophy-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            margin-top: 3rem;
+        }
+
+        .philosophy-item h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            font-family: var(--font-mono);
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+        
+        .philosophy-item p {
+            font-family: var(--font-serif);
+            font-size: 1.1rem;
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--border-color);
+            padding: 3rem 2rem;
+            margin-top: 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .footer-col h4 {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            color: var(--text-muted);
+        }
+
+        .footer-col p {
+            font-size: 0.9rem;
+            max-width: 300px;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in-up {
+            opacity: 0;
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        .delay-1 { animation-delay: 0.2s; }
+        .delay-2 { animation-delay: 0.4s; }
+        .delay-3 { animation-delay: 0.6s; }
+
+        /* Responsive */
         @media (max-width: 768px) {
             header {
-                padding: 0.5rem 1rem; /* Reducimos padding lateral para dar más espacio */
-                /* justify-content: space-between se mantiene heredado */
-            }
-
-            .logo {
-                height: 35px; /* Reducido de 50px a 35px */
-            }
-
-            .logo-right {
-                height: 30px; /* Reducido de 40px a 30px */
-            }
-
-            .container {
-                margin-top: 80px; /* Ajustado porque el header es más pequeño ahora */
                 padding: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
             }
 
-            .form-container {
-                padding: 1.5rem;
+            nav ul {
+                gap: 1.5rem;
+                flex-wrap: wrap;
+            }
+
+            .hero {
+                padding-top: 140px;
+            }
+
+            .philosophy-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .modules-grid {
+                grid-template-columns: 1fr;
+                margin: 2rem 1rem;
             }
             
-            h1 {
-                font-size: 1.5rem;
+            .module-card {
+                min-height: auto;
+                padding: 2rem 1.5rem;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Header semitransparente con dos logos -->
-    <header>
-        <div class="header-left">
-            <img src="logo.png" alt="Taber Luz de Israel Logo" class="logo" id="logo">
+
+    <!-- Header -->
+    <header id="main-header">
+        <div class="brand">
+            TABER DIGITAL <span>INFRAESTRUCTURA v1.0</span>
         </div>
-        
-        <div class="header-right">
-            <img src="logo-profe-tracker.png" alt="Profe-Tracker Logo" class="logo-right" id="logoRight">
-        </div>
+        <nav>
+            <ul>
+                <li><a href="#modulos">Módulos</a></li>
+                <li><a href="#filosofia">Filosofía</a></li>
+                <li><a href="profe-tracker/index.html">Acceso Rápido</a></li>
+            </ul>
+        </nav>
     </header>
 
-    <!-- Main Content -->
-    <div class="container">
-        <div class="form-container">
-            <h1>Registro de Profesiones</h1>
-            
-            <form id="profeForm">
-                <div class="form-group">
-                    <label for="fecha">Fecha:</label>
-                    <input type="date" id="fecha" name="fecha" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="lugar">Lugar:</label>
-                    <input type="text" id="lugar" name="lugar" placeholder="Ej: Pan y Chocolate, Evangelismo Domingo, Tardes Evangelisticas" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="compartidos">Compartidos:</label>
-                    <input type="text" id="compartidos" name="compartidos" placeholder="Ej: 10. 15" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="profesiones">Profesiones:</label>
-                    <textarea id="profesiones" name="profesiones" placeholder="Ej: 17, 10" required></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="servidores">Servidores:</label>
-                    <input type="text" id="servidores" name="servidores" placeholder="Ej: 10, 16" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="nota">Nota:</label>
-                    <textarea id="nota" name="nota" placeholder="Aqui ingresas tu reporte Ej: Dios les bendiga Herman@s. El miércoles 23 de este mes en el ministerio de pan y chocolate se compartió la palabra con 55 personas y hubo 16 profesiones de fé para la gloria y honra de Dios."></textarea>
-                </div>
-
-                <button type="submit" id="submitBtn">Enviar Registro</button>
-            </form>
-
-            <div id="successMessage" class="success-message">
-                ✓ ¡Registro enviado exitosamente!
-            </div>
-            <div id="errorMessage" class="error-message">
-                ✗ Error al enviar el registro. Por favor intenta nuevamente.
-            </div>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-tag mono">Taber Luz de Israel · Sistemas Internos</div>
+        <h1>Diseñado por nosotros.<br>Gestionado por ti.</h1>
+        <p class="fade-in-up delay-1">
+            Una suite de herramientas digitales minimalistas para el registro, seguimiento y crecimiento ministerial. 
+            Sin ruido. Solo datos esenciales.
+        </p>
+        <div class="mono fade-in-up delay-2" style="margin-top: 2rem; color: var(--text-muted);">
+            Estado del sistema: <span style="color: #2ecc71;">● Operativo</span> &nbsp;|&nbsp; Módulos activos: 07
         </div>
+    </section>
+
+    <!-- Modules Grid -->
+    <div id="modulos" class="modules-grid">
+        
+        <!-- Módulo 1: Profe-Tracker -->
+        <article class="module-card fade-in-up delay-1">
+            <div>
+                <span class="module-number">FIG. 01 — REGISTRADO</span>
+                <h2 class="module-title">Profe-Tracker</h2>
+                <p class="module-desc">Registro centralizado de profesiones de fe. Captura fecha, lugar, compartidos y servidores en tiempo real.</p>
+            </div>
+            <a href="profe-tracker/index.html" class="module-link">
+                Acceder al módulo <span>→</span>
+            </a>
+        </article>
+
+        <!-- Módulo 2: Asistencia -->
+        <article class="module-card fade-in-up delay-2">
+            <div>
+                <span class="module-number">FIG. 02 — PENDIENTE</span>
+                <h2 class="module-title">Control de Asistencia</h2>
+                <p class="module-desc">Conteo dominical y de eventos. Segmentación por hombres, mujeres, niños y visitantes nuevos.</p>
+            </div>
+            <a href="#" class="module-link" onclick="alert('Módulo en construcción')">
+                Próximamente <span>→</span>
+            </a>
+        </article>
+
+        <!-- Módulo 3: Visitantes -->
+        <article class="module-card fade-in-up delay-3">
+            <div>
+                <span class="module-number">FIG. 03 — PENDIENTE</span>
+                <h2 class="module-title">Bienvenida</h2>
+                <p class="module-desc">Captura de datos de nuevos visitantes para seguimiento automatizado y primera visita.</p>
+            </div>
+            <a href="#" class="module-link" onclick="alert('Módulo en construcción')">
+                Próximamente <span>→</span>
+            </a>
+        </article>
+
+        <!-- Módulo 4: Finanzas -->
+        <article class="module-card fade-in-up delay-1">
+            <div>
+                <span class="module-number">FIG. 04 — RESTRINGIDO</span>
+                <h2 class="module-title">Diezmos y Ofrendas</h2>
+                <p class="module-desc">Reporte seguro de cierres de caja. Desglose por efectivo, cheque y transferencia.</p>
+            </div>
+            <a href="#" class="module-link" onclick="alert('Acceso restringido a administración')">
+                Acceso Restringido <span>→</span>
+            </a>
+        </article>
+
+        <!-- Módulo 5: Oración -->
+        <article class="module-card fade-in-up delay-2">
+            <div>
+                <span class="module-number">FIG. 05 — PENDIENTE</span>
+                <h2 class="module-title">Peticiones</h2>
+                <p class="module-desc">Canal directo para solicitudes de oración. Clasificación por urgencia y tipo.</p>
+            </div>
+            <a href="#" class="module-link" onclick="alert('Módulo en construcción')">
+                Próximamente <span>→</span>
+            </a>
+        </article>
+
+        <!-- Módulo 6: Voluntarios -->
+        <article class="module-card fade-in-up delay-3">
+            <div>
+                <span class="module-number">FIG. 06 — PENDIENTE</span>
+                <h2 class="module-title">Rostering</h2>
+                <p class="module-desc">Gestión de turnos y disponibilidad para ujieres, alabanza y niños.</p>
+            </div>
+            <a href="#" class="module-link" onclick="alert('Módulo en construcción')">
+                Próximamente <span>→</span>
+            </a>
+        </article>
+
     </div>
 
+    <!-- Philosophy Section -->
+    <section id="filosofia" class="philosophy">
+        <div class="mono" style="margin-bottom: 2rem; border-left: 2px solid var(--text-main); padding-left: 1rem;">
+            01 — Lo que cambia
+        </div>
+        <h2 style="font-size: 2rem; margin-bottom: 3rem; font-family: var(--font-serif);">Qué obtienes cuando tu iglesia es digital</h2>
+        
+        <div class="philosophy-grid">
+            <div class="philosophy-item">
+                <h3>01 · Centralización</h3>
+                <p>Nada de papeles sueltos o excels desordenados. Cada dato tiene un hogar único y seguro en la nube.</p>
+            </div>
+            <div class="philosophy-item">
+                <h3>02 · Inmediatez</h3>
+                <p>Los reportes se hacen desde el celular, en el momento. La información está disponible al instante para los líderes.</p>
+            </div>
+            <div class="philosophy-item">
+                <h3>03 · Escala</h3>
+                <p>Sistemas diseñados para crecer contigo. Desde una célula pequeña hasta grandes congregaciones.</p>
+            </div>
+            <div class="philosophy-item">
+                <h3>04 · Transparencia</h3>
+                <p>Datos claros, accesibles y verificables. Confianza total en la administración de los recursos y el fruto.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-col">
+            <h4>Taber Luz de Israel</h4>
+            <p>Infraestructura Digital Colaborativa.<br>El Salvador, 2026.</p>
+        </div>
+        <div class="footer-col">
+            <h4>Estado</h4>
+            <p class="mono">v1.0 · Build 2026.09.27</p>
+            <p class="mono" style="margin-top: 0.5rem; color: #2ecc71;">Sistemas Online</p>
+        </div>
+        <div class="footer-col">
+            <h4>Contacto</h4>
+            <p class="mono">soporte@taberdigital.org</p>
+        </div>
+    </footer>
+
     <script>
-        // URL de SheetDB API configurada
-        const SHEETDB_API_URL = 'https://sheetdb.io/api/v1/5gqgmamuwhfo5';
-
-        document.getElementById('profeForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-
-            const submitBtn = document.getElementById('submitBtn');
-            const successMsg = document.getElementById('successMessage');
-            const errorMsg = document.getElementById('errorMessage');
-
-            // Ocultar mensajes previos
-            successMsg.style.display = 'none';
-            errorMsg.style.display = 'none';
-
-            // Deshabilitar botón durante envío
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Enviando...';
-
-            // Recopilar datos del formulario
-            const formData = {
-                fecha: document.getElementById('fecha').value,
-                lugar: document.getElementById('lugar').value,
-                compartidos: document.getElementById('compartidos').value,
-                profesiones: document.getElementById('profesiones').value,
-                servidores: document.getElementById('servidores').value,
-                nota: document.getElementById('nota').value
-            };
-
-            try {
-                // Enviar datos a SheetDB API
-                const response = await fetch(SHEETDB_API_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(formData)
-                });
-
-                if (response.ok) {
-                    // Éxito
-                    successMsg.style.display = 'block';
-                    this.reset();
-                    // Restablecer fecha a hoy
-                    document.getElementById('fecha').valueAsDate = new Date();
-                } else {
-                    // Error
-                    throw new Error('Error en la respuesta del servidor');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                errorMsg.style.display = 'block';
-            } finally {
-                // Rehabilitar botón
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Enviar Registro';
+        // Efecto scroll en header
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('main-header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
             }
         });
 
-        // Establecer fecha predeterminada como hoy
-        document.getElementById('fecha').valueAsDate = new Date();
+        // Simple reveal on scroll for modules (optional enhancement)
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.module-card').forEach(card => {
+            // Initial state for JS animation if needed, currently handled by CSS classes
+            // card.style.opacity = '0';
+            // card.style.transform = 'translateY(20px)';
+            // observer.observe(card);
+        });
     </script>
 </body>
 </html>
