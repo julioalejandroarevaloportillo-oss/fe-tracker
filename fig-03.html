@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FIG. 03 — Bienvenida</title>
+    <style>
+        :root {
+            --bg-color: #fcfbf9;
+            --text-main: #1a1a1a;
+            --text-muted: #666;
+            --border-color: #d1d1d1;
+            --input-border: #eee;
+            --accent-success: #2ecc71;
+            --accent-error: #e74c3c;
+            --font-serif: 'Georgia', 'Times New Roman', serif;
+            --font-sans: 'Helvetica Neue', 'Arial', sans-serif;
+            --font-mono: 'Courier New', Courier, monospace;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: var(--bg-color); color: var(--text-main); font-family: var(--font-sans); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+        h1, h2, h3 { font-family: var(--font-serif); font-weight: normal; }
+        .mono { font-family: var(--font-mono); font-size: 0.8rem; letter-spacing: -0.5px; text-transform: uppercase; color: var(--text-muted); }
+
+        /* Header */
+        header { position: fixed; top: 0; left: 0; width: 100%; padding: 1.5rem 2rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid transparent; background: rgba(252, 251, 249, 0.95); backdrop-filter: blur(5px); z-index: 1000; transition: border-color 0.3s ease; }
+        header.scrolled { border-bottom: 1px solid var(--border-color); }
+        .brand-logo { height: 45px; width: auto; display: block; filter: grayscale(100%); opacity: 0.8; transition: all 0.3s ease; }
+        .brand-logo:hover { opacity: 1; filter: grayscale(0%); }
+        nav a { text-decoration: none; color: var(--text-main); font-family: var(--font-mono); font-size: 0.8rem; text-transform: uppercase; margin-left: 2rem; position: relative; }
+        nav a::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 1px; background-color: var(--text-main); transition: width 0.3s ease; }
+        nav a:hover::after { width: 100%; }
+
+        /* Main Container */
+        .container { max-width: 800px; margin: 140px auto 60px; padding: 0 2rem; animation: fadeIn 1s ease-out; }
+
+        /* Form Header */
+        .form-header { margin-bottom: 3rem; border-bottom: 1px solid var(--border-color); padding-bottom: 2rem; }
+        .form-tag { display: inline-block; margin-bottom: 1rem; border-left: 2px solid var(--text-main); padding-left: 1rem; }
+        .form-title { font-size: clamp(2rem, 4vw, 3rem); line-height: 1.1; margin-bottom: 1rem; letter-spacing: -1px; }
+        .form-desc { font-family: var(--font-serif); font-size: 1.1rem; color: var(--text-muted); max-width: 500px; }
+
+        /* Form Styling */
+        .form-group { margin-bottom: 2.5rem; position: relative; }
+        label { display: block; font-family: var(--font-mono); font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.5rem; letter-spacing: 1px; }
+        
+        input[type="text"], input[type="tel"], input[type="date"], textarea {
+            width: 100%; padding: 0.8rem 0; background: transparent; border: none; border-bottom: 1px solid var(--input-border);
+            font-family: var(--font-serif); font-size: 1.1rem; color: var(--text-main); border-radius: 0;
+            transition: border-color 0.3s ease, padding-left 0.3s ease;
+        }
+        input:focus, textarea:focus { outline: none; border-bottom: 1px solid var(--text-main); padding-left: 5px; background-color: rgba(0,0,0,0.02); }
+        textarea { resize: vertical; min-height: 100px; line-height: 1.8; }
+        ::placeholder { color: #ccc; font-style: italic; font-family: var(--font-serif); }
+
+        /* Checkbox Custom Style */
+        .checkbox-group { display: flex; align-items: center; gap: 1rem; margin-top: 0.5rem; }
+        .checkbox-group input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--text-main); cursor: pointer; }
+        .checkbox-group label { margin: 0; cursor: pointer; font-family: var(--font-serif); font-size: 1rem; color: var(--text-main); text-transform: none; letter-spacing: 0; }
+
+        /* Button */
+        button { width: 100%; padding: 1.2rem; background-color: var(--text-main); color: #fff; border: none; font-family: var(--font-mono); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: all 0.3s ease; margin-top: 1rem; }
+        button:hover { background-color: #333; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        button:disabled { background-color: #ccc; cursor: not-allowed; transform: none; box-shadow: none; }
+
+        /* Messages */
+        .success-message, .error-message { margin-top: 2rem; padding: 1.5rem; border: 1px solid; text-align: center; font-family: var(--font-mono); font-size: 0.85rem; text-transform: uppercase; display: none; animation: slideUp 0.4s ease-out; }
+        .success-message { border-color: var(--accent-success); color: var(--accent-success); background: rgba(46, 204, 113, 0.05); }
+        .error-message { border-color: var(--accent-error); color: var(--accent-error); background: rgba(231, 76, 60, 0.05); }
+
+        .page-footer { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border-color); text-align: center; font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 768px) {
+            header { padding: 1rem; flex-direction: column; gap: 1rem; align-items: flex-start; }
+            nav a { margin-left: 0; margin-right: 1.5rem; }
+            .container { margin-top: 160px; padding: 0 1.5rem; }
+            .form-title { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header id="main-header">
+        <div class="brand">
+            <img src="logo.png" alt="Taber Luz de Israel" class="brand-logo">
+        </div>
+        <nav>
+            <a href="index.html">Volver al Hub</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="form-header">
+            <div class="form-tag mono">FIG. 03 — REGISTRO ACTIVO</div>
+            <h1 class="form-title">Bienvenida</h1>
+            <p class="form-desc">
+                Registro de nuevos visitantes. Cada nombre es una oportunidad para conectar.
+            </p>
+        </div>
+
+        <form id="welcomeForm">
+            <!-- Fecha -->
+            <div class="form-group">
+                <label for="fecha">01 / Fecha de Visita</label>
+                <input type="date" id="fecha" name="fecha" required>
+            </div>
+
+            <!-- Datos Personales -->
+            <div class="form-group">
+                <label for="nombre_completo">02 / Nombre Completo</label>
+                <input type="text" id="nombre_completo" name="nombre_completo" placeholder="Ej: Juan Pérez" required>
+            </div>
+
+            <div class="form-group">
+                <label for="telefono">03 / Teléfono / WhatsApp</label>
+                <input type="tel" id="telefono" name="telefono" placeholder="Ej: +503 1234 5678" required>
+            </div>
+
+            <!-- ¿Es primera vez? -->
+            <div class="form-group">
+                <label>04 / ¿Es tu primera vez en Taber?</label>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="es_primera_vez" name="es_primera_vez" value="Si">
+                    <label for="es_primera_vez">Sí, es mi primera vez</label>
+                </div>
+            </div>
+
+            <!-- Procedencia -->
+            <div class="form-group">
+                <label for="iglesia_procedencia">05 / Iglesia de Procedencia (Opcional)</label>
+                <input type="text" id="iglesia_procedencia" name="iglesia_procedencia" placeholder="Ej: Iglesia Bautista Central, o 'Ninguna'">
+            </div>
+
+            <!-- Motivo de Oración -->
+            <div class="form-group">
+                <label for="motivo_oracion">06 / Motivo de Oración (Opcional)</label>
+                <textarea id="motivo_oracion" name="motivo_oracion" placeholder="¿Hay algo específico por lo que te gustaría que oremos?"></textarea>
+            </div>
+
+            <button type="submit" id="submitBtn">Registrar Visitante</button>
+        </form>
+
+        <div id="successMessage" class="success-message">
+            ✓ Visitante registrado exitosamente. Bienvenido a la familia.
+        </div>
+        <div id="errorMessage" class="error-message">
+             Error de conexión. Por favor intente nuevamente.
+        </div>
+
+        <div class="page-footer">
+            Taber Digital · Bienvenida v1.0 <br>
+            Hecho a mano, módulo por módulo · El Salvador 2026
+        </div>
+    </div>
+
+    <script>
+        // URL de SheetDB (Asegúrate de que tu hoja tenga las columnas actualizadas)
+        const SHEETDB_API_URL = 'https://sheetdb.io/api/v1/5gqgmamuwhfo5'; 
+
+        document.getElementById('welcomeForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const submitBtn = document.getElementById('submitBtn');
+            const successMsg = document.getElementById('successMessage');
+            const errorMsg = document.getElementById('errorMessage');
+
+            successMsg.style.display = 'none';
+            errorMsg.style.display = 'none';
+
+            const originalBtnText = submitBtn.textContent;
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Registrando...';
+
+            // Manejo especial para el checkbox
+            const esPrimeraVez = document.getElementById('es_primera_vez').checked ? 'Si' : 'No';
+
+            const formData = {
+                fecha: document.getElementById('fecha').value,
+                nombre_completo: document.getElementById('nombre_completo').value,
+                telefono: document.getElementById('telefono').value,
+                es_primera_vez: esPrimeraVez,
+                iglesia_procedencia: document.getElementById('iglesia_procedencia').value,
+                motivo_oracion: document.getElementById('motivo_oracion').value
+                // Se eliminaron: interes y lider_asignado
+            };
+
+            try {
+                const response = await fetch(SHEETDB_API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+
+                if (response.ok) {
+                    successMsg.style.display = 'block';
+                    this.reset();
+                    document.getElementById('fecha').valueAsDate = new Date();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    
+                    // Redirigir al Hub después de 3 segundos
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 3000);
+                } else {
+                    throw new Error('Error en la respuesta');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                errorMsg.style.display = 'block';
+                window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalBtnText;
+            }
+        });
+
+        document.getElementById('fecha').valueAsDate = new Date();
+
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('main-header');
+            if (window.scrollY > 50) header.classList.add('scrolled');
+            else header.classList.remove('scrolled');
+        });
+    </script>
+</body>
+</html>
