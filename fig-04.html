@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FIG. 04 — Peticiones de Oración</title>
+    <style>
+        :root {
+            --bg-color: #fcfbf9;
+            --text-main: #1a1a1a;
+            --text-muted: #666;
+            --border-color: #d1d1d1;
+            --input-border: #eee;
+            --accent-success: #2ecc71;
+            --accent-error: #e74c3c;
+            --font-serif: 'Georgia', 'Times New Roman', serif;
+            --font-sans: 'Helvetica Neue', 'Arial', sans-serif;
+            --font-mono: 'Courier New', Courier, monospace;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: var(--bg-color); color: var(--text-main); font-family: var(--font-sans); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+        h1, h2, h3 { font-family: var(--font-serif); font-weight: normal; }
+        .mono { font-family: var(--font-mono); font-size: 0.8rem; letter-spacing: -0.5px; text-transform: uppercase; color: var(--text-muted); }
+
+        /* Header */
+        header { position: fixed; top: 0; left: 0; width: 100%; padding: 1.5rem 2rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid transparent; background: rgba(252, 251, 249, 0.95); backdrop-filter: blur(5px); z-index: 1000; transition: border-color 0.3s ease; }
+        header.scrolled { border-bottom: 1px solid var(--border-color); }
+        .brand-logo { height: 45px; width: auto; display: block; filter: grayscale(100%); opacity: 0.8; transition: all 0.3s ease; }
+        .brand-logo:hover { opacity: 1; filter: grayscale(0%); }
+        nav a { text-decoration: none; color: var(--text-main); font-family: var(--font-mono); font-size: 0.8rem; text-transform: uppercase; margin-left: 2rem; position: relative; }
+        nav a::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 1px; background-color: var(--text-main); transition: width 0.3s ease; }
+        nav a:hover::after { width: 100%; }
+
+        /* Main Container */
+        .container { max-width: 800px; margin: 140px auto 60px; padding: 0 2rem; animation: fadeIn 1s ease-out; }
+
+        /* Form Header */
+        .form-header { margin-bottom: 3rem; border-bottom: 1px solid var(--border-color); padding-bottom: 2rem; }
+        .form-tag { display: inline-block; margin-bottom: 1rem; border-left: 2px solid var(--text-main); padding-left: 1rem; }
+        .form-title { font-size: clamp(2rem, 4vw, 3rem); line-height: 1.1; margin-bottom: 1rem; letter-spacing: -1px; }
+        .form-desc { font-family: var(--font-serif); font-size: 1.1rem; color: var(--text-muted); max-width: 500px; }
+
+        /* Form Styling */
+        .form-group { margin-bottom: 2.5rem; position: relative; }
+        label { display: block; font-family: var(--font-mono); font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.5rem; letter-spacing: 1px; }
+        
+        input[type="text"], input[type="date"], select, textarea {
+            width: 100%; padding: 0.8rem 0; background: transparent; border: none; border-bottom: 1px solid var(--input-border);
+            font-family: var(--font-serif); font-size: 1.1rem; color: var(--text-main); border-radius: 0;
+            transition: border-color 0.3s ease, padding-left 0.3s ease;
+        }
+        input:focus, select:focus, textarea:focus { outline: none; border-bottom: 1px solid var(--text-main); padding-left: 5px; background-color: rgba(0,0,0,0.02); }
+        textarea { resize: vertical; min-height: 120px; line-height: 1.8; }
+        ::placeholder { color: #ccc; font-style: italic; font-family: var(--font-serif); }
+
+        /* Checkbox & Radio Custom Style */
+        .option-group { display: flex; flex-direction: column; gap: 1rem; margin-top: 0.5rem; }
+        .option-item { display: flex; align-items: center; gap: 1rem; }
+        .option-item input[type="checkbox"], .option-item input[type="radio"] { width: 20px; height: 20px; accent-color: var(--text-main); cursor: pointer; }
+        .option-item label { margin: 0; cursor: pointer; font-family: var(--font-serif); font-size: 1rem; color: var(--text-main); text-transform: none; letter-spacing: 0; }
+
+        /* Button */
+        button { width: 100%; padding: 1.2rem; background-color: var(--text-main); color: #fff; border: none; font-family: var(--font-mono); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: all 0.3s ease; margin-top: 1rem; }
+        button:hover { background-color: #333; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        button:disabled { background-color: #ccc; cursor: not-allowed; transform: none; box-shadow: none; }
+
+        /* Messages */
+        .success-message, .error-message { margin-top: 2rem; padding: 1.5rem; border: 1px solid; text-align: center; font-family: var(--font-mono); font-size: 0.85rem; text-transform: uppercase; display: none; animation: slideUp 0.4s ease-out; }
+        .success-message { border-color: var(--accent-success); color: var(--accent-success); background: rgba(46, 204, 113, 0.05); }
+        .error-message { border-color: var(--accent-error); color: var(--accent-error); background: rgba(231, 76, 60, 0.05); }
+
+        .page-footer { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border-color); text-align: center; font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 768px) {
+            header { padding: 1rem; flex-direction: column; gap: 1rem; align-items: flex-start; }
+            nav a { margin-left: 0; margin-right: 1.5rem; }
+            .container { margin-top: 160px; padding: 0 1.5rem; }
+            .form-title { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header id="main-header">
+        <div class="brand">
+            <img src="logo.png" alt="Taber Luz de Israel" class="brand-logo">
+        </div>
+        <nav>
+            <a href="index.html">Volver al Hub</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="form-header">
+            <div class="form-tag mono">FIG. 04 — REGISTRO ACTIVO</div>
+            <h1 class="form-title">Peticiones de Oración</h1>
+            <p class="form-desc">
+                Canal directo para tus cargas. Nuestro equipo de intercesores ora por ti esta semana.
+            </p>
+        </div>
+
+        <form id="prayerForm">
+            <!-- Fecha -->
+            <div class="form-group">
+                <label for="fecha">01 / Fecha</label>
+                <input type="date" id="fecha" name="fecha" required>
+            </div>
+
+            <!-- Nombre (Opcional si es anónimo) -->
+            <div class="form-group">
+                <label for="nombre">02 / Nombre (Opcional)</label>
+                <input type="text" id="nombre" name="nombre" placeholder="Tu nombre o 'Anónimo'">
+            </div>
+
+            <!-- ¿Deseas ser anónimo? -->
+            <div class="form-group">
+                <label>03 / Privacidad</label>
+                <div class="option-group">
+                    <div class="option-item">
+                        <input type="checkbox" id="anonimo" name="anonimo" value="Si">
+                        <label for="anonimo">Marcar esta petición como ANÓNIMA (Solo los líderes verán el motivo, no el nombre)</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tipo de Petición -->
+            <div class="form-group">
+                <label for="tipo_peticion">04 / Tipo de Petición</label>
+                <select id="tipo_peticion" name="tipo_peticion" required style="font-family: var(--font-serif);">
+                    <option value="" disabled selected>Seleccione una categoría...</option>
+                    <option value="Salud / Enfermedad">Salud / Enfermedad</option>
+                    <option value="Familia / Matrimonio">Familia / Matrimonio</option>
+                    <option value="Trabajo / Finanzas">Trabajo / Finanzas</option>
+                    <option value="Espiritual / Fortalecimiento">Espiritual / Fortalecimiento</option>
+                    <option value="Protección">Protección</option>
+                    <option value="Acción de Gracias">Acción de Gracias</option>
+                    <option value="Otro">Otro</option>
+                </select>
+            </div>
+
+            <!-- Nivel de Urgencia -->
+            <div class="form-group">
+                <label>05 / Nivel de Urgencia</label>
+                <div class="option-group">
+                    <div class="option-item">
+                        <input type="radio" id="urgencia_normal" name="urgencia" value="Normal" checked>
+                        <label for="urgencia_normal">Normal (Para oración semanal)</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" id="urgencia_urgente" name="urgencia" value="Urgente">
+                        <label for="urgencia_urgente" style="color: #c0392b; font-weight: bold;">Urgente (Necesidad inmediata)</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detalle de la Petición -->
+            <div class="form-group">
+                <label for="detalle">06 / Detalle de la Petición</label>
+                <textarea id="detalle" name="detalle" placeholder="Describe tu necesidad con libertad. Este espacio es seguro." required></textarea>
+            </div>
+
+            <!-- ¿Podemos contactarte? -->
+            <div class="form-group">
+                <label>07 / Seguimiento Pastoral</label>
+                <div class="option-group">
+                    <div class="option-item">
+                        <input type="checkbox" id="contacto_permitido" name="contacto_permitido" value="Si">
+                        <label for="contacto_permitido">Sí, un líder puede contactarme para orar juntos o dar seguimiento.</label>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" id="submitBtn">Enviar Petición</button>
+        </form>
+
+        <div id="successMessage" class="success-message">
+            ✓ Petición recibida. Estamos orando por ti.
+        </div>
+        <div id="errorMessage" class="error-message">
+             Error de conexión. Por favor intente nuevamente.
+        </div>
+
+        <div class="page-footer">
+            Taber Digital · Intercesión v1.0 <br>
+            Hecho a mano, módulo por módulo · El Salvador 2026
+        </div>
+    </div>
+
+    <script>
+        const SHEETDB_API_URL = 'https://sheetdb.io/api/v1/22mfkwfxtmx1z'; 
+
+        document.getElementById('prayerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const submitBtn = document.getElementById('submitBtn');
+            const successMsg = document.getElementById('successMessage');
+            const errorMsg = document.getElementById('errorMessage');
+
+            successMsg.style.display = 'none';
+            errorMsg.style.display = 'none';
+
+            const originalBtnText = submitBtn.textContent;
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Enviando...';
+
+            // Manejo de checkboxes y radios
+            const esAnonimo = document.getElementById('anonimo').checked ? 'Si' : 'No';
+            const urgencia = document.querySelector('input[name="urgencia"]:checked').value;
+            const contactoPermitido = document.getElementById('contacto_permitido').checked ? 'Si' : 'No';
+            
+            // Si es anónimo, limpiamos el nombre o lo marcamos
+            let nombre = document.getElementById('nombre').value;
+            if (esAnonimo === 'Si' && nombre.trim() === '') {
+                nombre = 'Anónimo';
+            }
+
+            const formData = {
+                fecha: document.getElementById('fecha').value,
+                nombre: nombre,
+                anonimo: esAnonimo,
+                tipo_peticion: document.getElementById('tipo_peticion').value,
+                urgencia: urgencia,
+                detalle: document.getElementById('detalle').value,
+                contacto_permitido: contactoPermitido
+            };
+
+            try {
+                const response = await fetch(SHEETDB_API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+
+                if (response.ok) {
+                    successMsg.style.display = 'block';
+                    this.reset();
+                    document.getElementById('fecha').valueAsDate = new Date();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 3000);
+                } else {
+                    throw new Error('Error en la respuesta');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                errorMsg.style.display = 'block';
+                window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalBtnText;
+            }
+        });
+
+        document.getElementById('fecha').valueAsDate = new Date();
+
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('main-header');
+            if (window.scrollY > 50) header.classList.add('scrolled');
+            else header.classList.remove('scrolled');
+        });
+    </script>
+</body>
+</html>
